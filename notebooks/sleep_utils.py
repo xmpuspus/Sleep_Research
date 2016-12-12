@@ -41,3 +41,7 @@ def getwindow(signal, window_duration = 16, window_interval=1, f_s = 4):
         
     return signal_segments, time_segments
 
+def array_rolling_window(a, window):
+    shape = a.shape[:-1] + (a.shape[-1] - window + 1, window)
+    strides = a.strides + (a.strides[-1],)
+    return np.lib.stride_tricks.as_strided(a, shape=shape, strides=strides)
