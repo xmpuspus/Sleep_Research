@@ -45,3 +45,11 @@ def array_rolling_window(a, window):
     shape = a.shape[:-1] + (a.shape[-1] - window + 1, window)
     strides = a.strides + (a.strides[-1],)
     return np.lib.stride_tricks.as_strided(a, shape=shape, strides=strides)
+
+def heart_rate(time_peaks):
+    dt = time_peaks[1:] - time_peaks[:-1]
+    return 1/np.mean(dt)
+
+def heart_rate_var(time_peaks):
+    dt = time_peaks[1:] - time_peaks[:-1]
+    return np.std(dt)
