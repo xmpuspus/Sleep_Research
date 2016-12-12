@@ -48,8 +48,8 @@ def array_rolling_window(a, window):
 
 def heart_rate(time_peaks):
     dt = time_peaks[1:] - time_peaks[:-1]
-    return 1/np.mean(dt)
+    return 1/np.nanmean(dt)
 
 def heart_rate_var(time_peaks):
     dt = time_peaks[1:] - time_peaks[:-1]
-    return np.std(dt)
+    return np.nanstd(dt)
