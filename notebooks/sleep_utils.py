@@ -8,6 +8,7 @@ import scipy.signal as ss
 import seaborn as sns
 from scipy.ndimage import convolve1d
 import itertools
+from peakdetect import peakdetect
 
 
 def getwindow(signal, window_duration = 16, window_interval=1, f_s = 4):
@@ -46,6 +47,11 @@ def array_rolling_window(a, window):
     strides = a.strides + (a.strides[-1],)
     return np.lib.stride_tricks.as_strided(a, shape=shape, strides=strides)
 
+def divide_to_epochs(a, epoch_endindex, epoch_size, fs):
+    win_size = fs*epoch_size
+    sig_epochs = [a[x-win_size +1 : x+1] for x in epoch_endindex]
+    return np.vstack(sig_epochs)
+
 def heart_rate(time_peaks):
     dt = time_peaks[1:] - time_peaks[:-1]
     return 1/np.nanmean(dt)
@@ -53,3 +59,11 @@ def heart_rate(time_peaks):
 def heart_rate_var(time_peaks):
     dt = time_peaks[1:] - time_peaks[:-1]
     return np.nanstd(dt)
+
+def bio_signal_peak_detect(sig, fs, sigtype = 'resp'):
+    signaltype = {'resp': fs/2*4, 'ecg': fs/2*2, 'bp': fs/2}
+    max_peaks, min_peaks = peakdetect(sig, lookahead = signaltype[sigtype])
+    max_peaks_idx, max_peaks_val = zip(*max_peaks)
+    min_peaks_idx, min_peaks_val = zip(*min_peaks)
+    
+    return  max_peaks_idx, max_peaks_val, min_peaks_idx, min_peaks_val
