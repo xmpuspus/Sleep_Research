@@ -67,3 +67,16 @@ def bio_signal_peak_detect(sig, fs, sigtype = 'resp'):
     min_peaks_idx, min_peaks_val = zip(*min_peaks)
     
     return  max_peaks_idx, max_peaks_val, min_peaks_idx, min_peaks_val
+
+def compute_amplitude(sig, fs, sigtype):
+    max_peaks_idx, max_peaks_val, min_peaks_idx, min_peaks_val = bio_signal_peak_detect(sig, fs, sigtype)
+    if max_peaks_idx[0] > min_peaks_idx[0]:
+        max_peaks_idx = max_peaks_idx[1:]
+        max_peaks_val = max_peaks_val[1:]
+    if len(max_peaks_idx) > len(min_peaks_idx):
+        amplitude = np.array(max_peaks_val[-len(min_peaks_idx):]) - np.array(min_peaks_val)
+    elif len(max_peaks_idx) < len(min_peaks_idx):
+        amplitude = np.array(max_peaks_val) - np.array(min_peaks_val[-len(max_peaks_idx):])
+    else: 
+        amplitude = np.array(max_peaks_val) - np.array(min_peaks_val)
+    return amplitude
