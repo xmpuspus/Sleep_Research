@@ -74,9 +74,9 @@ def compute_amplitude(sig, fs, sigtype):
         max_peaks_idx = max_peaks_idx[1:]
         max_peaks_val = max_peaks_val[1:]
     if len(max_peaks_idx) > len(min_peaks_idx):
-        amplitude = np.array(max_peaks_val[-len(min_peaks_idx):]) - np.array(min_peaks_val)
+        amplitude = np.array(max_peaks_val[-len(min_peaks_idx):]) - np.array(min_peaks_val[-len(min_peaks_idx):])
     elif len(max_peaks_idx) < len(min_peaks_idx):
-        amplitude = np.array(max_peaks_val) - np.array(min_peaks_val[-len(max_peaks_idx):])
+        amplitude = np.array(max_peaks_val[-len(max_peaks_idx):]) - np.array(min_peaks_val[-len(max_peaks_idx):])
     else: 
         amplitude = np.array(max_peaks_val) - np.array(min_peaks_val)
     return amplitude
